@@ -15,8 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MainPrueba.cpp">
+    <ClCompile Include="316299644_Practica8_GPO12.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\lighting.frag">
+      <Filter>Archivos de origen</Filter>
+    </None>
   </ItemGroup>
 </Project>
