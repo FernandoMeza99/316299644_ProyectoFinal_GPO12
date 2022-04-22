@@ -111,6 +111,8 @@ int main()
     Model centro((char*)"Pokeball2/centro.obj");
     Model cuerpo((char*)"Pokeball2/centrocuerpo.obj");*/
     Model beer((char*)"Models/Beer/mclarens.obj");
+    Model sillon((char*)"Models/Sillon/sillon.obj");
+
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     float vertices[] = {
@@ -212,7 +214,7 @@ int main()
         DoMovement();
 
         // Clear the colorbuffer
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         lightingShader.Use();
@@ -223,7 +225,7 @@ int main()
 
 
         // Set lights properties
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 1.8f, 1.8f, 1.8f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.5f, 0.5f, 0.5f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.5f, 0.5f, 0.5f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
 
@@ -251,118 +253,11 @@ int main()
         //glDrawArrays(GL_TRIANGLES, 0, 36);
         beer.Draw(lightingShader);
 
-        /*glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
+
         model = glm::mat4(1);
-        pokeabajo.Draw(lightingShader);
-
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.0f, 0.0f, 0.0f);
-        model = glm::mat4(1);
-        cuerpo.Draw(lightingShader);
-
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        model = glm::mat4(1);
-        centro.Draw(lightingShader);*/
-
-
-        //// SEGUNDA POKEBOLA
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.25f, 0.25f, 0.25f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.4f, 0.4f, 0.4f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.1f, 0.1f, 0.1f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.0f, 1.0f, 0.0f);  //color del objeto
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.35f, 0.35f, 0.35f);   // si queremos
-        //glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 128.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
-
-        //glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        //glBindVertexArray(VAO);
-
-        //pokearriba.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
-        //pokeabajo.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.0f, 0.0f, 0.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
-        //cuerpo.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
-        //centro.Draw(lightingShader);
-
-        //// TERCERA POKEBOLA
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.2f, 0.2f, 0.2f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.3f, 0.3f, 0.3f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.1f, 0.1f, 0.1f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.0f, 0.0f, 1.0f);  //color del objeto
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.3f, 0.3f, 0.3f);   // si queremos
-        //glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 192.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
-
-        //glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        //glBindVertexArray(VAO);
-
-        //pokearriba.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
-        //pokeabajo.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.0f, 0.0f, 0.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
-        //cuerpo.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
-        //centro.Draw(lightingShader);
-
-
-        //// CUARTA POKEBOLA
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.1f, 0.1f, 0.1f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.2f, 0.2f, 0.2f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.1f, 0.1f, 0.1f);
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 0.0f, 1.0f);  //color del objeto
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.0f, 0.0f, 0.0f);   // si queremos
-        //glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 256.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(15.0f, 0.0f, 0.0f));
-
-        //glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        //glBindVertexArray(VAO);
-
-        //pokearriba.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(15.0f, 0.0f, 0.0f));
-        //pokeabajo.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.0f, 0.0f, 0.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(15.0f, 0.0f, 0.0f));
-        //cuerpo.Draw(lightingShader);
-
-        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-        //model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(15.0f, 0.0f, 0.0f));
-        //centro.Draw(lightingShader);
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glBindVertexArray(VAO);
+        sillon.Draw(lightingShader);
 
         glBindVertexArray(0);
 
