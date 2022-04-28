@@ -1,3 +1,5 @@
+#include <iostream>
+#include <cmath>
 
 // Std. Includes
 #include <string>
@@ -50,72 +52,15 @@ GLfloat lastFrame = 0.0f;
 float rot = 0.0f;
 bool activanim = false;
 
-int main()
-{
-    // Init GLFW
-    glfwInit();
-    // Set all the required options for GLFW
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+// Positions of the point lights
+glm::vec3 pointLightPositions[] = {
+    glm::vec3(0.0f,0.0f, 0.0f),
+    glm::vec3(0.0f,0.0f, 0.0f),
+    glm::vec3(0.0f,0.0f,  0.0f),
+    glm::vec3(0.0f,0.0f, 0.0f)
+};
 
-    // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Iluminacion", nullptr, nullptr);
-
-    if (nullptr == window)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-
-        return EXIT_FAILURE;
-    }
-
-    glfwMakeContextCurrent(window);
-
-    glfwGetFramebufferSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
-
-    // Set the required callback functions
-    glfwSetKeyCallback(window, KeyCallback);
-    glfwSetCursorPosCallback(window, MouseCallback);
-
-    // GLFW Options
-    //glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
-
-    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
-    glewExperimental = GL_TRUE;
-    // Initialize GLEW to setup the OpenGL Function pointers
-    if (GLEW_OK != glewInit())
-    {
-        std::cout << "Failed to initialize GLEW" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    // Define the viewport dimensions
-    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-    // OpenGL options
-    glEnable(GL_DEPTH_TEST);
-
-    // Setup and compile our shaders
-    Shader shader("Shaders/modelLoading.vs", "Shaders/modelLoading.frag");
-    Shader lampshader("Shaders/lamp.vs", "Shaders/lamp.frag");
-    Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
-
-
-
-    // Load models
-    /*Model pokearriba((char*)"Pokeball2/pokearriba.obj");
-    Model pokeabajo((char*)"Pokeball2/pokeabajo.obj");
-    Model centro((char*)"Pokeball2/centro.obj");
-    Model cuerpo((char*)"Pokeball2/centrocuerpo.obj");*/
-    Model beer((char*)"Models/Beer/mclarens.obj");
-    Model sillon((char*)"Models/Sillon/sillon.obj");
-
-    glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
-    float vertices[] = {
+float vertices[] = {
       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -157,7 +102,86 @@ int main()
          0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-    };
+};
+
+glm::vec3 Light1 = glm::vec3(0);
+
+// Deltatime
+//GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
+//GLfloat lastFrame = 0.0f;  	// Time of last frame
+
+int main()
+{
+    // Init GLFW
+    glfwInit();
+    // Set all the required options for GLFW
+   /* glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
+
+    // Create a GLFWwindow object that we can use for GLFW's functions
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Iluminacion", nullptr, nullptr);
+
+    if (nullptr == window)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+
+        return EXIT_FAILURE;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    glfwGetFramebufferSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
+
+    // Set the required callback functions
+    glfwSetKeyCallback(window, KeyCallback);
+    glfwSetCursorPosCallback(window, MouseCallback);
+
+    // GLFW Options
+    //glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
+
+    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
+    glewExperimental = GL_TRUE;
+    // Initialize GLEW to setup the OpenGL Function pointers
+    if (GLEW_OK != glewInit())
+    {
+        std::cout << "Failed to initialize GLEW" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    // Define the viewport dimensions
+    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    // OpenGL options
+   // glEnable(GL_DEPTH_TEST);
+
+    // Setup and compile our shaders
+    Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
+    Shader lampShader("Shaders/lamp2.vs", "Shaders/lamp2.frag");
+    Shader shader("Shaders/modelLoading.vs", "Shaders/modelLoading.frag");
+    //Shader lampshader("Shaders/lamp.vs", "Shaders/lamp.frag");
+    //Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
+
+
+
+    // Load models
+    /*Model pokearriba((char*)"Pokeball2/pokearriba.obj");
+    Model pokeabajo((char*)"Pokeball2/pokeabajo.obj");
+    Model centro((char*)"Pokeball2/centro.obj");
+    Model cuerpo((char*)"Pokeball2/centrocuerpo.obj");*/
+    Model beer((char*)"Models/Beer/mclarensS.obj");
+    Model sillon((char*)"Models/Sillon/sillon.obj");
+    Model sombrilla((char*)"Models/Sombrilla/SombrillaAmarilla.obj");
+    Model libro((char*)"Models/Libro/libro.obj");
+    Model cabra((char*)"Models/Cabra/Goat.obj");
+    Model mesa((char*)"Models/Mesa/mesa.obj");
+
+   // glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
+    
 
     // First, set the container's VAO (and VBO)
     GLuint VBO, VAO;
@@ -175,32 +199,11 @@ int main()
 
     // Load textures
 
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    int textureWidth, textureHeight, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* image;
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    lightingShader.Use();
+    glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
 
-    image = stbi_load("images/goku.jpg", &textureWidth, &textureHeight, &nrChannels, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    if (image)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(image);
-
-
+    glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
+    
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
@@ -217,60 +220,152 @@ int main()
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // OpenGL options
+        glEnable(GL_DEPTH_TEST);
+
+        // -- CARGANDO MODELOS -- 
+
         lightingShader.Use();
-        GLint lightPosLoc = glGetUniformLocation(lightingShader.Program, "light.position");
+        //GLint lightPosLoc = glGetUniformLocation(lightingShader.Program, "light.position");
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(lightPosLoc, lightPos.x + movelightPosX, lightPos.y + movelightPosY, lightPos.z + movelightPosZ);
+        //glUniform3f(lightPosLoc, lightPos.x + movelightPosX, lightPos.y + movelightPosY, lightPos.z + movelightPosZ);
         glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
 
         // Set lights properties
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.5f, 0.5f, 0.5f);
+        /*glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.5f, 0.5f, 0.5f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);*/
+
+        // Directional light
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.1f, 0.1f, 0.1f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.7f, 0.7f, 0.7f);
+        
+        // Point light 1
+        glm::vec3 lightColor;
+        lightColor.x = abs(sin(glfwGetTime() * Light1.x));
+        lightColor.y = abs(sin(glfwGetTime() * Light1.y));
+        lightColor.z = abs(sin(glfwGetTime() * Light1.z));
 
 
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), lightColor.x, lightColor.y, lightColor.z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x, lightColor.y, lightColor.z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 0.0f, 0.0f, 0.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.7f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 1.8f);
+
+        // SpotLight
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.position"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.direction"), camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.ambient"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.diffuse"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "spotLight.specular"), 0.5f, 0.5f, 0.5f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.constant"), 1.0f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.linear"), 0.07f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.quadratic"), 0.17f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.cutOff"), glm::cos(glm::radians(12.5f)));
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(15.0f)));
+
+        // Set material properties
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 16.0f);
+        
 
 
         glm::mat4 view = camera.GetViewMatrix();
-        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        //glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        //glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+        // Get the uniform locations
+        GLint modelLoc = glGetUniformLocation(lightingShader.Program, "model");
+        GLint viewLoc = glGetUniformLocation(lightingShader.Program, "view");
+        GLint projLoc = glGetUniformLocation(lightingShader.Program, "projection");
+
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+
+        glm::mat4 model(1);
+        glBindVertexArray(0);
 
         // Set material properties
 
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.19225f, 0.19225f, 0.19225f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.50754f, 0.50754f, 0.50754f);  //color del objeto
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.50754f, 0.50754f, 0.50754f);   // si queremos
-        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.4f);             //que sea mas opaca
+        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.19225f, 0.19225f, 0.19225f);
+        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.50754f, 0.50754f, 0.50754f);  //color del objeto
+        //glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.50754f, 0.50754f, 0.50754f);   // si queremos
+        //glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.4f);             //que sea mas opaca
 
+        //BEER
 
-
-        // Draw the loaded model
-        glm::mat4 model(1);
-        // model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 3.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        //Pusimos en 0 activaTransparencia para que no afectara al pasto
+       // glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+       // glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 0.0, 1.0);
         beer.Draw(lightingShader);
+       // glDisable(GL_BLEND);  //Desactiva el canal alfa 
+        //AÑADIMOS NUEVAMENTE EL COLOR BLANCO PARA NO AFECTAR LOS OBJETOS
+        //SI ES QUE ESTAMOS MODIFICANDO EL COLOR DE TRANSPARENCIA (LINEA 315)
+        glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
 
+        // SILLON
+
+        //glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(3.0f, 0.0f, 3.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+       // glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 0.0, 0.75);
+        sillon.Draw(lightingShader);
+       // glDisable(GL_BLEND);  //Desactiva el canal alfa 
+        //glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
+
+
+        // -- SOMBRILLA --
 
         model = glm::mat4(1);
-        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glBindVertexArray(VAO);
-        sillon.Draw(lightingShader);
+        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        sombrilla.Draw(lightingShader);
+
+        // -- LIBRO ---
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-3.0f, 0.0f, -3.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        libro.Draw(lightingShader);
+
+        // -- CABRA --
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(6.0f, 0.0f, -6.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        cabra.Draw(lightingShader);
+
+        // -- MESA --
+
+        model = glm::mat4(1);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        mesa.Draw(lightingShader);
 
         glBindVertexArray(0);
 
 
 
         //simular mi luz y ver donde esta ubicada
-        lampshader.Use();
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        lampShader.Use();
+        glUniformMatrix4fv(glGetUniformLocation(lampShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(lampShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos + movelightPosX + movelightPosY + movelightPosZ);
         model = glm::scale(model, glm::vec3(0.02f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(lampShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
