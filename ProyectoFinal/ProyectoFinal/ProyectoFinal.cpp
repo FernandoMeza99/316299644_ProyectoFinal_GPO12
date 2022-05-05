@@ -178,6 +178,9 @@ int main()
     Model libro((char*)"Models/Libro/libro.obj");
     Model cabra((char*)"Models/Cabra/Goat.obj");
     Model mesa((char*)"Models/Mesa/mesa.obj");
+    Model bota((char*)"Models/Bota/bota.obj");
+    Model piso((char*)"Models/Fachada/piso.obj");
+    Model pared1((char*)"Models/Fachada/pared1.obj");
 
    // glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -354,8 +357,25 @@ int main()
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         mesa.Draw(lightingShader);
 
+        // -- BOTA --
+        model = glm::mat4(1);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        bota.Draw(lightingShader);
+
         glBindVertexArray(0);
 
+        // -- PISO --
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        piso.Draw(lightingShader);
+
+        glBindVertexArray(0);
+
+        // --PARED 1--
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        pared1.Draw(lightingShader);
+
+        glBindVertexArray(0);
 
 
         //simular mi luz y ver donde esta ubicada
