@@ -168,10 +168,7 @@ int main()
 
 
     // Load models
-    /*Model pokearriba((char*)"Pokeball2/pokearriba.obj");
-    Model pokeabajo((char*)"Pokeball2/pokeabajo.obj");
-    Model centro((char*)"Pokeball2/centro.obj");
-    Model cuerpo((char*)"Pokeball2/centrocuerpo.obj");*/
+    
     Model beer((char*)"Models/Beer/mclarensS.obj");
     Model sillon((char*)"Models/Sillon/sillon.obj");
     Model sombrilla((char*)"Models/Sombrilla/SombrillaAmarilla.obj");
@@ -181,6 +178,19 @@ int main()
     Model bota((char*)"Models/Bota/bota.obj");
     Model piso((char*)"Models/Fachada/piso.obj");
     Model pared1((char*)"Models/Fachada/pared1.obj");
+    Model pared2((char*)"Models/Fachada/pared2.obj");
+    Model pared3((char*)"Models/Fachada/pared3.obj");
+    Model pared4((char*)"Models/Fachada/pared4.obj");
+    Model ladrillosG1((char*)"Models/Fachada/ladrillosG1.obj");
+    Model ladrillosGVentana((char*)"Models/Fachada/ladrillosGVentana.obj");
+    Model ladrillosGPuerta((char*)"Models/Fachada/ladrillosGPuerta.obj");
+    Model ladrillosGPiso((char*)"Models/Fachada/ladrillosGPiso.obj");
+    Model ladrillosGTecho((char*)"Models/Fachada/ladrillosGTecho.obj");
+    Model barandal((char*)"Models/Fachada/barandal.obj");
+    Model logo((char*)"Models/Fachada/logo.obj");
+    Model puerta((char*)"Models/Fachada/puerta.obj");
+    Model ventana1((char*)"Models/Fachada/ventanaIzq.obj");
+    Model ventana2((char*)"Models/Fachada/ventanaDer.obj");
 
    // glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -362,18 +372,81 @@ int main()
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         bota.Draw(lightingShader);
 
-        glBindVertexArray(0);
+   
 
         // -- PISO --
 
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         piso.Draw(lightingShader);
 
-        glBindVertexArray(0);
-
         // --PARED 1--
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         pared1.Draw(lightingShader);
+
+        // --PARED 2 --
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        pared2.Draw(lightingShader);
+        // -- PARED 3 --
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        pared3.Draw(lightingShader);
+        // -- PARED 4 --
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        pared4.Draw(lightingShader);
+
+        // -- Pared ladrillos grises 1
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        ladrillosG1.Draw(lightingShader);
+
+        // -- Pared ladrillos grises Ventana
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        ladrillosGVentana.Draw(lightingShader);
+
+        // -- Pared ladrillos grises Puerta
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        ladrillosGPuerta.Draw(lightingShader);
+
+        // -- Ladrillos grises piso
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        ladrillosGPiso.Draw(lightingShader);
+
+        // -- Ladrillos grises techo
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        ladrillosGTecho.Draw(lightingShader);
+
+        // -- BARANDAL --
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        barandal.Draw(lightingShader);
+
+        // -- Logo --
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        logo.Draw(lightingShader);
+
+        // -- Puerta --
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        puerta.Draw(lightingShader);
+
+        // -- Ventana Izquierda --
+
+        glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        model = glm::mat4(1);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+        glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 0.5);
+        ventana1.Draw(lightingShader);
+        glDisable(GL_BLEND);
+
+
+        glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        model = glm::mat4(1);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+        glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 0.5);
+        ventana2.Draw(lightingShader);
+        glDisable(GL_BLEND);
 
         glBindVertexArray(0);
 
