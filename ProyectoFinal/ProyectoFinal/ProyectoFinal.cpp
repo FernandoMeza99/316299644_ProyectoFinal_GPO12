@@ -33,6 +33,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
+void animacion();
 
 
 // Camera
@@ -44,6 +45,7 @@ bool firstMouse = true;
 
 // Light attributes
 glm::vec3 lightPos(0.5f, 0.5f, 2.5f);
+glm::vec3 PosIni(-4.0f, 0.0f, -4.0f);
 float movelightPosX = 0.0f;
 float movelightPosY = 0.0f;
 float movelightPosZ = 0.0f;
@@ -59,6 +61,31 @@ glm::vec3 pointLightPositions[] = {
     glm::vec3(0.0f,0.0f,  0.0f),
     glm::vec3(0.0f,0.0f, 0.0f)
 };
+
+//Animación Cabra
+float gravedad = 9.8;
+float velocidadI = 15;
+float tiempo = 0.0;
+float rotKit = 0.0;
+float movKitX = 0.0;
+float movKitZ = 0.0;
+float movKitXaux = velocidadI * sin(rotKit);
+float movKitZaux = velocidadI * cos(rotKit);
+float Ymax = velocidadI + (velocidadI * sin(rotKit)) / 2 * gravedad;
+float Xmax = (velocidadI * velocidadI * sin(2 * rotKit)) / gravedad;
+float tsubida = velocidadI / gravedad;
+
+
+//controlar los estados de animacion 
+bool circuito = false;
+bool recorrido1 = true;
+bool recorrido2 = false;
+bool recorrido3 = false;
+bool recorrido4 = false;
+bool recorrido5 = false;
+bool librobool = false;
+bool abierto = true;
+bool cerrado = false;
 
 float vertices[] = {
       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -105,6 +132,7 @@ float vertices[] = {
 };
 
 glm::vec3 Light1 = glm::vec3(0);
+
 
 // Deltatime
 //GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -171,8 +199,10 @@ int main()
     
     Model beer((char*)"Models/Beer/mclarensS.obj");
     Model sillon((char*)"Models/Sillon/sillon.obj");
+    Model sillon2((char*)"Models/Sillon/sillon2.obj");
     Model sombrilla((char*)"Models/Sombrilla/SombrillaAmarilla.obj");
-    Model libro((char*)"Models/Libro/libro.obj");
+    Model libroA((char*)"Models/Libro/libroA.obj");
+    Model libroB((char*)"Models/Libro/libroB.obj");
     Model cabra((char*)"Models/Cabra/Goat.obj");
     Model mesa((char*)"Models/Mesa/mesa.obj");
     Model bota((char*)"Models/Bota/bota.obj");
@@ -228,6 +258,7 @@ int main()
         // Check and call events
         glfwPollEvents();
         DoMovement();
+        animacion();
 
         // Clear the colorbuffer
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -302,7 +333,7 @@ int main()
 
 
         glm::mat4 model(1);
-        glBindVertexArray(0);
+       //lBindVertexArray(0);
 
         // Set material properties
 
@@ -316,7 +347,7 @@ int main()
         //glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 3.0f));
+        //model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 3.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         //Pusimos en 0 activaTransparencia para que no afectara al pasto
        // glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
@@ -332,7 +363,7 @@ int main()
         //glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(3.0f, 0.0f, 3.0f));
+       // model = glm::translate(model, glm::vec3(3.0f, 0.0f, 3.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
        // glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 0.0, 0.75);
         sillon.Draw(lightingShader);
@@ -340,24 +371,36 @@ int main()
         //glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
 
 
+        // -- Sillon 2 --
+
+        model = glm::mat4(1);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        sillon2.Draw(lightingShader);
         // -- SOMBRILLA --
 
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));
+        //model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         sombrilla.Draw(lightingShader);
 
         // -- LIBRO ---
 
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(-3.0f, 0.0f, -3.0f));
+        model = glm::translate(model, glm::vec3(3.0f, 3.51f, 3.0f));
+        model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        libro.Draw(lightingShader);
+        libroA.Draw(lightingShader);
 
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(3.0f, 3.51f, 3.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        libroB.Draw(lightingShader);
         // -- CABRA --
 
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(6.0f, 0.0f, -6.0f));
+        model = glm::translate(model, PosIni + glm::vec3(movKitZ, movKitX, 0));
+        model = glm::rotate(model, glm::radians(rotKit), glm::vec3(0.0f, 1.0f, 0.0));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         cabra.Draw(lightingShader);
 
@@ -375,7 +418,7 @@ int main()
    
 
         // -- PISO --
-
+        model = glm::mat4(1);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         piso.Draw(lightingShader);
 
@@ -438,6 +481,8 @@ int main()
         ventana1.Draw(lightingShader);
         glDisable(GL_BLEND);
 
+
+        // -- Ventana Derecha
 
         glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -505,6 +550,137 @@ void DoMovement()
             rot -= 0.1f;
     }
 
+    if (keys[GLFW_KEY_I])
+    {
+        pointLightPositions[3].x += 0.1f;
+        pointLightPositions[3].y += 0.1f;
+        pointLightPositions[3].z += 0.1f;
+        circuito = true;
+    }
+
+    if (keys[GLFW_KEY_O])
+    {
+        circuito = false;
+    }
+
+    if (keys[GLFW_KEY_M])
+    {
+        librobool = true;
+    }
+
+    if (keys[GLFW_KEY_M])
+    {
+        librobool = true;
+    }
+
+
+    if (librobool) {
+        
+        if (abierto) {
+            rot += 0.5f;
+
+            if (rot > 90) {
+                abierto = false;
+                cerrado = true;
+            }
+        }
+
+        if (cerrado) {
+            rot -= 0.5f;
+
+            if (rot < 0) {
+                abierto = true;
+                cerrado = false;
+            }
+        }
+    }
+    
+
+}
+
+void animacion()
+{
+
+
+    //Movimiento Cabra
+    if (circuito)
+    {
+
+        if (recorrido1)
+        {
+            
+            movKitXaux = velocidadI + (-gravedad * tiempo);
+            //movKitZaux += 0.09f;
+            tiempo += 0.001;
+            movKitXaux = movKitXaux / 1000;
+            movKitX += movKitXaux;
+            movKitZ += 0.009f;
+            if (movKitXaux < 0)
+            {
+                movKitZaux = 0.09;
+                recorrido1 = false;
+                recorrido2 = true;
+            }
+        }
+        if (recorrido2)
+        {
+            movKitXaux = velocidadI + (-gravedad * tiempo);
+            tiempo += 0.001;
+            movKitXaux = movKitXaux / 1000;
+            movKitZaux += 0.09f;
+
+            movKitX += movKitXaux;
+            movKitZ += 0.009f;
+            if (movKitZaux > 122)
+            {
+                tiempo = 0;
+                recorrido3 = true;
+                recorrido2 = false;
+
+            }
+        }
+
+        if (recorrido3)
+        {
+
+            rotKit = 270;
+            movKitXaux = velocidadI + (-gravedad * tiempo);
+            tiempo += 0.001;
+            movKitXaux = movKitXaux / 1000;
+            //movKitZaux += 0.09f;
+
+            movKitX += movKitXaux;
+            movKitZ -= 0.009f;
+            if (movKitXaux < 0)
+            {
+                movKitZaux = 122;
+                recorrido4 = true;
+                recorrido3 = false;
+
+            }
+        }
+
+        if (recorrido4)
+        {
+            rotKit = 270;
+            movKitXaux = velocidadI + (-gravedad * tiempo);
+            tiempo += 0.001;
+            movKitXaux = movKitXaux / 1000;
+            movKitZaux -= 0.09f;
+
+            movKitX += movKitXaux;
+            movKitZ -= 0.009f;
+            if (movKitZaux < -20)
+            {
+                tiempo = 0;
+                recorrido1 = true;
+                recorrido4 = false;
+            }
+        }
+        
+
+
+    }
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -562,6 +738,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         //activanim = true;
         movelightPosZ -= 0.1f;
     }
+
+    
 }
 
 void MouseCallback(GLFWwindow* window, double xPos, double yPos)
