@@ -34,6 +34,9 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 void animacion();
+void animacionBotas();
+void animacionCerveza();
+void animacionLibro();
 
 
 // Camera
@@ -45,14 +48,14 @@ bool firstMouse = true;
 
 // Light attributes
 glm::vec3 lightPos(0.5f, 0.5f, 2.5f);
-glm::vec3 PosIni(-4.0f, 0.0f, -4.0f);
+glm::vec3 PosIni(-5.993f, 1.47f, -4.544f);
 float movelightPosX = 0.0f;
 float movelightPosY = 0.0f;
 float movelightPosZ = 0.0f;
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
-float rot = 0.0f;
-bool activanim = false;
+
+
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
@@ -62,30 +65,63 @@ glm::vec3 pointLightPositions[] = {
     glm::vec3(0.0f,0.0f, 0.0f)
 };
 
-//Animación Cabra
+//Variables Animación Cabra
+
 float gravedad = 9.8;
-float velocidadI = 15;
+float velocidadI = 5;
 float tiempo = 0.0;
 float rotKit = 0.0;
+float movKitY = 0.0;
 float movKitX = 0.0;
-float movKitZ = 0.0;
-float movKitXaux = velocidadI * sin(rotKit);
-float movKitZaux = velocidadI * cos(rotKit);
-float Ymax = velocidadI + (velocidadI * sin(rotKit)) / 2 * gravedad;
-float Xmax = (velocidadI * velocidadI * sin(2 * rotKit)) / gravedad;
-float tsubida = velocidadI / gravedad;
+float movKitYaux = velocidadI * sin(rotKit);
+float movKitXaux = velocidadI * cos(rotKit);
 
 
-//controlar los estados de animacion 
-bool circuito = false;
+// variables bota //
+
+float alturaBotaI = 0.0; 
+float alturaBotaD = 0.0;
+
+// -- variables cerveza -- //
+
+float alturaBeer = 0.0;
+float inclinarBeer = 0.0;
+
+// -- Variables del Libro -- 
+
+float rot = 0.0f;
+
+//controlar los estados de animacion de la cabra
+
+bool cabraBool = false;
 bool recorrido1 = true;
 bool recorrido2 = false;
 bool recorrido3 = false;
 bool recorrido4 = false;
-bool recorrido5 = false;
+
+
+// controlar los estados de animacion del libro
 bool librobool = false;
 bool abierto = true;
 bool cerrado = false;
+
+// controlar los estados de animacion de las botas
+
+bool botaBool = false;
+bool arribaI = true;
+bool abajoI = false;
+bool arribaD = false;
+bool abajoD = false;
+
+// controlar los estados de animacion de la cerveza
+
+bool cervezaBool = false;
+bool arribaCerveza = true;
+bool servir = false;
+bool noServir = false;
+bool abajoCerveza = false;
+
+
 
 float vertices[] = {
       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -134,23 +170,19 @@ float vertices[] = {
 glm::vec3 Light1 = glm::vec3(0);
 
 
-// Deltatime
-//GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
-//GLfloat lastFrame = 0.0f;  	// Time of last frame
-
 int main()
 {
     // Init GLFW
     glfwInit();
     // Set all the required options for GLFW
-   /* glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Iluminacion", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Proyecto Final", nullptr, nullptr);
 
     if (nullptr == window)
     {
@@ -169,7 +201,7 @@ int main()
     glfwSetCursorPosCallback(window, MouseCallback);
 
     // GLFW Options
-    //glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
+    glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
 
     // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
     glewExperimental = GL_TRUE;
@@ -190,8 +222,7 @@ int main()
     Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
     Shader lampShader("Shaders/lamp2.vs", "Shaders/lamp2.frag");
     Shader shader("Shaders/modelLoading.vs", "Shaders/modelLoading.frag");
-    //Shader lampshader("Shaders/lamp.vs", "Shaders/lamp.frag");
-    //Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
+    
 
 
 
@@ -205,7 +236,8 @@ int main()
     Model libroB((char*)"Models/Libro/libroB.obj");
     Model cabra((char*)"Models/Cabra/Goat.obj");
     Model mesa((char*)"Models/Mesa/mesa.obj");
-    Model bota((char*)"Models/Bota/bota.obj");
+    Model botaI((char*)"Models/Bota/botaIzq.obj");
+    Model botaD((char*)"Models/Bota/botaDer.obj");
     Model piso((char*)"Models/Fachada/piso.obj");
     Model pared1((char*)"Models/Fachada/pared1.obj");
     Model pared2((char*)"Models/Fachada/pared2.obj");
@@ -259,6 +291,9 @@ int main()
         glfwPollEvents();
         DoMovement();
         animacion();
+        animacionBotas();
+        animacionCerveza();
+        animacionLibro();
 
         // Clear the colorbuffer
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -276,10 +311,7 @@ int main()
         glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
 
-        // Set lights properties
-        /*glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"), 0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);*/
+        
 
         // Directional light
         glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
@@ -344,62 +376,47 @@ int main()
 
         //BEER
 
-        //glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 3.0f));
+        model = glm::translate(model, glm::vec3(4.558f, 3.694f + alturaBeer, 2.559f));
+        model = glm::rotate(model, glm::radians(-inclinarBeer), glm::vec3(1.0f, 0.0f, 0.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        //Pusimos en 0 activaTransparencia para que no afectara al pasto
-       // glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
-       // glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 0.0, 1.0);
         beer.Draw(lightingShader);
-       // glDisable(GL_BLEND);  //Desactiva el canal alfa 
-        //AÑADIMOS NUEVAMENTE EL COLOR BLANCO PARA NO AFECTAR LOS OBJETOS
-        //SI ES QUE ESTAMOS MODIFICANDO EL COLOR DE TRANSPARENCIA (LINEA 315)
         glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
 
         // SILLON
-
-        //glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         model = glm::mat4(1);
-       // model = glm::translate(model, glm::vec3(3.0f, 0.0f, 3.0f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-       // glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 0.0, 0.75);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));   
         sillon.Draw(lightingShader);
-       // glDisable(GL_BLEND);  //Desactiva el canal alfa 
-        //glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
-
-
+   
         // -- Sillon 2 --
 
         model = glm::mat4(1);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         sillon2.Draw(lightingShader);
+   
         // -- SOMBRILLA --
 
         model = glm::mat4(1);
-        //model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         sombrilla.Draw(lightingShader);
 
         // -- LIBRO ---
 
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(3.0f, 3.51f, 3.0f));
+        model = glm::translate(model, glm::vec3(3.0f, 3.65f, 3.0f));
         model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 0.0f, 1.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         libroA.Draw(lightingShader);
 
 
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(3.0f, 3.51f, 3.0f));
+        model = glm::translate(model, glm::vec3(3.0f, 3.65f, 3.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         libroB.Draw(lightingShader);
         // -- CABRA --
 
         model = glm::mat4(1);
-        model = glm::translate(model, PosIni + glm::vec3(movKitZ, movKitX, 0));
+        model = glm::translate(model, PosIni + glm::vec3(movKitX, movKitY, 0));
         model = glm::rotate(model, glm::radians(rotKit), glm::vec3(0.0f, 1.0f, 0.0));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         cabra.Draw(lightingShader);
@@ -410,11 +427,17 @@ int main()
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         mesa.Draw(lightingShader);
 
-        // -- BOTA --
+        // -- BOTA Izquierda--
         model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(0.0f, 0.15 + alturaBotaI, -1.587f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        bota.Draw(lightingShader);
+        botaI.Draw(lightingShader);
 
+        // -- Bota Derecha -- 
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(0.0f, 0.15 + alturaBotaD, -2.713));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        botaD.Draw(lightingShader);
    
 
         // -- PISO --
@@ -544,23 +567,21 @@ void DoMovement()
         camera.ProcessKeyboard(RIGHT, deltaTime);
     }
 
-    if (activanim)
-    {
-        if (rot > -90.0f)
-            rot -= 0.1f;
-    }
+    
 
     if (keys[GLFW_KEY_I])
     {
         pointLightPositions[3].x += 0.1f;
         pointLightPositions[3].y += 0.1f;
         pointLightPositions[3].z += 0.1f;
-        circuito = true;
+        cabraBool = true;
     }
+
+    // Teclas animacion cabra
 
     if (keys[GLFW_KEY_O])
     {
-        circuito = false;
+        cabraBool = false;
     }
 
     if (keys[GLFW_KEY_M])
@@ -568,14 +589,96 @@ void DoMovement()
         librobool = true;
     }
 
+
+    // teclas animacion libro //
     if (keys[GLFW_KEY_M])
     {
         librobool = true;
     }
+    if (keys[GLFW_KEY_N])
+    {
+        librobool = false;
+    }
+
+    // teclas animacion botas
+
+    if (keys[GLFW_KEY_B])
+    {
+        botaBool = true;
+    }
+    if (keys[GLFW_KEY_V])
+    {
+        botaBool = false;
+    }
+
+    // -- teclas animacion cerveza --
+
+    if (keys[GLFW_KEY_P])
+    {
+        cervezaBool = true;
+    }
+    if (keys[GLFW_KEY_O])
+    {
+        cervezaBool = false;
+    }
 
 
-    if (librobool) {
+
+}
+
+void animacionCerveza() {
+    // -- MOVIMIENTO CERVEZA --
+
+    if (cervezaBool) {
         
+        if (arribaCerveza) {
+            alturaBeer += 0.025f;
+
+            if (alturaBeer > 1.0) {
+
+                servir = true;
+                arribaCerveza = false;
+            }
+        }
+
+        if (servir) {
+
+            inclinarBeer += 0.2;
+
+            if (inclinarBeer > 120) {
+
+                servir = false;
+                noServir = true;
+            }
+        }
+
+        if (noServir) {
+
+            inclinarBeer -= 0.2;
+
+            if (inclinarBeer < 0.0) {
+                noServir = false;
+                abajoCerveza = true;
+            }
+
+        }
+
+        if (abajoCerveza) {
+
+            alturaBeer -= 0.01f;
+
+            if (alturaBeer < 0.0) {
+                abajoCerveza = false;
+                arribaCerveza = true;
+            }
+        }
+    }
+}
+
+void animacionLibro() {
+    // -- movimiento libro -- //
+    if (librobool) {
+
         if (abierto) {
             rot += 0.5f;
 
@@ -594,7 +697,54 @@ void DoMovement()
             }
         }
     }
-    
+}
+
+void animacionBotas() {
+    // -- movimiento botas --  //
+    if (botaBool) {
+        if (arribaI) {
+            alturaBotaI += 0.05f;
+
+            if (alturaBotaI > 2.0) {
+                arribaI = false;
+                abajoI = true;
+            }
+        }
+
+        if (abajoI) {
+
+            alturaBotaI -= 0.05f;
+
+            if (alturaBotaI < 0.15) {
+                arribaD = true;
+                abajoI = false;
+
+            }
+        }
+
+        if (arribaD) {
+
+            alturaBotaD += 0.05f;
+
+            if (alturaBotaD > 2.0) {
+
+                arribaD = false;
+                abajoD = true;
+            }
+        }
+
+        if (abajoD) {
+
+            alturaBotaD -= 0.05;
+
+            if (alturaBotaD < 0.15) {
+                abajoD = false;
+                arribaI = true;
+            }
+        }
+
+
+    }
 
 }
 
@@ -603,35 +753,34 @@ void animacion()
 
 
     //Movimiento Cabra
-    if (circuito)
+    if (cabraBool)
     {
 
         if (recorrido1)
         {
             
-            movKitXaux = velocidadI + (-gravedad * tiempo);
-            //movKitZaux += 0.09f;
+            movKitYaux = velocidadI + (-gravedad * tiempo);
             tiempo += 0.001;
-            movKitXaux = movKitXaux / 1000;
-            movKitX += movKitXaux;
-            movKitZ += 0.009f;
-            if (movKitXaux < 0)
+            movKitYaux = movKitYaux / 1000;
+            movKitY += movKitYaux;
+            movKitX += 0.009f;
+            if (movKitYaux < 0)
             {
-                movKitZaux = 0.09;
+                movKitXaux = 0.09;
                 recorrido1 = false;
                 recorrido2 = true;
             }
         }
         if (recorrido2)
         {
-            movKitXaux = velocidadI + (-gravedad * tiempo);
+            movKitYaux = velocidadI + (-gravedad * tiempo);
             tiempo += 0.001;
-            movKitXaux = movKitXaux / 1000;
-            movKitZaux += 0.09f;
+            movKitYaux = movKitYaux / 1000;
+            movKitXaux += 0.09f;
 
-            movKitX += movKitXaux;
-            movKitZ += 0.009f;
-            if (movKitZaux > 122)
+            movKitY += movKitYaux;
+            movKitX += 0.009f;
+            if (movKitXaux > 47)
             {
                 tiempo = 0;
                 recorrido3 = true;
@@ -643,17 +792,17 @@ void animacion()
         if (recorrido3)
         {
 
-            rotKit = 270;
-            movKitXaux = velocidadI + (-gravedad * tiempo);
+            rotKit = 180;
+            movKitYaux = velocidadI + (-gravedad * tiempo);
             tiempo += 0.001;
-            movKitXaux = movKitXaux / 1000;
+            movKitYaux = movKitYaux / 1000;
             //movKitZaux += 0.09f;
 
-            movKitX += movKitXaux;
-            movKitZ -= 0.009f;
-            if (movKitXaux < 0)
+            movKitY += movKitYaux;
+            movKitX -= 0.009f;
+            if (movKitYaux < 0)
             {
-                movKitZaux = 122;
+                movKitXaux = 122;
                 recorrido4 = true;
                 recorrido3 = false;
 
@@ -662,16 +811,17 @@ void animacion()
 
         if (recorrido4)
         {
-            rotKit = 270;
-            movKitXaux = velocidadI + (-gravedad * tiempo);
+            rotKit = 180;
+            movKitYaux = velocidadI + (-gravedad * tiempo);
             tiempo += 0.001;
-            movKitXaux = movKitXaux / 1000;
-            movKitZaux -= 0.09f;
+            movKitYaux = movKitYaux / 1000;
+            movKitXaux -= 0.09f;
 
-            movKitX += movKitXaux;
-            movKitZ -= 0.009f;
-            if (movKitZaux < -20)
+            movKitY += movKitYaux;
+            movKitX -= 0.009f;
+            if (movKitXaux < 78)
             {
+                rotKit = 0;
                 tiempo = 0;
                 recorrido1 = true;
                 recorrido4 = false;
