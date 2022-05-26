@@ -34,7 +34,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 void animacion();
-void animacionBotas();
+void animacionRefri();
 void animacionCerveza();
 void animacionLibro();
 
@@ -87,17 +87,24 @@ float alturaBotaD = 0.0;
 float alturaBeer = 0.0;
 float inclinarBeer = 0.0;
 
+
+// --- VARIABLES segundero
+
+float segunderoRot = 0.0;
+
+// --- VARIABLE REFRIGERADOR
+
+float puertaRot = 0.0;
+
 // -- Variables del Libro -- 
 
 float rot = 0.0f;
 
-//controlar los estados de animacion de la cabra
+//controlar los estados de animacion del segundero
 
-bool cabraBool = false;
+bool segunderoBool = false;
 bool recorrido1 = true;
-bool recorrido2 = false;
-bool recorrido3 = false;
-bool recorrido4 = false;
+
 
 
 // controlar los estados de animacion del libro
@@ -105,13 +112,12 @@ bool librobool = false;
 bool abierto = true;
 bool cerrado = false;
 
-// controlar los estados de animacion de las botas
+// controlar los estados de animacion del refrigerador
 
-bool botaBool = false;
-bool arribaI = true;
-bool abajoI = false;
-bool arribaD = false;
-bool abajoD = false;
+bool refriBool = false;
+bool abriendo = true;
+bool cerrando = false;
+
 
 // controlar los estados de animacion de la cerveza
 
@@ -228,16 +234,18 @@ int main()
 
     // Load models
     
+    // ----  CUARTO 1 MC LARENS PUB  -------
+
     Model beer((char*)"Models/Beer/mclarensS.obj");
     Model sillon((char*)"Models/Sillon/sillon.obj");
     Model sillon2((char*)"Models/Sillon/sillon2.obj");
     Model sombrilla((char*)"Models/Sombrilla/SombrillaAmarilla.obj");
     Model libroA((char*)"Models/Libro/libroA.obj");
     Model libroB((char*)"Models/Libro/libroB.obj");
-    Model cabra((char*)"Models/Cabra/Goat.obj");
+    //Model cabra((char*)"Models/Cabra/Goat.obj");
     Model mesa((char*)"Models/Mesa/mesa.obj");
-    Model botaI((char*)"Models/Bota/botaIzq.obj");
-    Model botaD((char*)"Models/Bota/botaDer.obj");
+    //Model botaI((char*)"Models/Bota/botaIzq.obj");
+    //Model botaD((char*)"Models/Bota/botaDer.obj");
     Model piso((char*)"Models/Fachada/piso.obj");
     Model pared1((char*)"Models/Fachada/pared1.obj");
     Model pared2((char*)"Models/Fachada/pared2.obj");
@@ -253,6 +261,25 @@ int main()
     Model puerta((char*)"Models/Fachada/puerta.obj");
     Model ventana1((char*)"Models/Fachada/ventanaIzq.obj");
     Model ventana2((char*)"Models/Fachada/ventanaDer.obj");
+    
+
+    // ----- CUARTO 2 DEPARTAMENTO DE TED Y MARSHALL  ------
+    
+    Model pisoDepa((char*)"Models/FachadaDepa/piso.obj");
+    Model paredesDepa((char*)"Models/FachadaDepa/pared.obj");
+    Model techoDepa((char*)"Models/FachadaDepa/techo.obj");
+    Model mesaDepa((char*)"Models/mesaDepa/mesaDepa.obj");
+    Model sillonDepa((char*)"Models/sillonDepa/sillonDepa.obj");
+    Model lampara((char*)"Models/lamparaDepa/lampara.obj");
+    Model restirador((char*)"Models/Restirador/restirador.obj");
+    Model ventanas((char*)"Models/FachadaDepa/ventanas.obj");
+    Model puertas((char*)"Models/FachadaDepa/puertas.obj");
+    Model puertaEx((char*)"Models/FachadaDepa/puerta.obj");
+    Model segundero((char*)"Models/Reloj/segundero.obj");
+    Model reloj((char*)"Models/Reloj/reloj.obj");
+    Model desayunador((char*)"Models/FachadaDepa/desayunador.obj");
+    Model refrigerador((char*)"Models/refri/refri.obj");
+    Model refrigeradorPuerta((char*)"Models/refri/puerta.obj");
 
    // glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -291,7 +318,7 @@ int main()
         glfwPollEvents();
         DoMovement();
         animacion();
-        animacionBotas();
+        animacionRefri();
         animacionCerveza();
         animacionLibro();
 
@@ -415,11 +442,11 @@ int main()
         libroB.Draw(lightingShader);
         // -- CABRA --
 
-        model = glm::mat4(1);
-        model = glm::translate(model, PosIni + glm::vec3(movKitX, movKitY, 0));
-        model = glm::rotate(model, glm::radians(rotKit), glm::vec3(0.0f, 1.0f, 0.0));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        cabra.Draw(lightingShader);
+        //model = glm::mat4(1);
+        //model = glm::translate(model, PosIni + glm::vec3(movKitX, movKitY, 0));
+        //model = glm::rotate(model, glm::radians(rotKit), glm::vec3(0.0f, 1.0f, 0.0));
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        //cabra.Draw(lightingShader);
 
         // -- MESA --
 
@@ -427,17 +454,17 @@ int main()
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         mesa.Draw(lightingShader);
 
-        // -- BOTA Izquierda--
-        model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(0.0f, 0.15 + alturaBotaI, -1.587f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        botaI.Draw(lightingShader);
+        //// -- BOTA Izquierda--
+        //model = glm::mat4(1);
+        //model = glm::translate(model, glm::vec3(0.0f, 0.15 + alturaBotaI, -1.587f));
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        //botaI.Draw(lightingShader);
 
-        // -- Bota Derecha -- 
-        model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(0.0f, 0.15 + alturaBotaD, -2.713));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        botaD.Draw(lightingShader);
+        //// -- Bota Derecha -- 
+        //model = glm::mat4(1);
+        //model = glm::translate(model, glm::vec3(0.0f, 0.15 + alturaBotaD, -2.713));
+        //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        //botaD.Draw(lightingShader);
    
 
         // -- PISO --
@@ -516,8 +543,115 @@ int main()
         ventana2.Draw(lightingShader);
         glDisable(GL_BLEND);
 
-        glBindVertexArray(0);
+        // --- CUARTO 2 DEPARTAMENTO DE TED Y MARSHALL ----
 
+
+        // --- PISO ---
+
+        //model = glm::mat4(1);
+        //model = glm::translate(model, glm::vec3(-91.047f, 0.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        pisoDepa.Draw(lightingShader);
+
+    
+
+        //// --- PARED ---
+
+        /*model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-91.047f, 0.0f, 0.0f));*/
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        paredesDepa.Draw(lightingShader);
+
+       
+
+        //// --- TECHO ---
+
+        //model = glm::mat4(1);
+        //model = glm::translate(model, glm::vec3(-91.047f, 0.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        techoDepa.Draw(lightingShader);
+
+        // ---- MESA -----
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        mesaDepa.Draw(lightingShader);
+
+        // ---- SILLON ----
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        sillonDepa.Draw(lightingShader);
+
+        // ---- LAMPARA ----
+        
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        lampara.Draw(lightingShader);
+
+        // ---- RESTIRADOR ---
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        restirador.Draw(lightingShader);
+
+        // --- RELOJ ----
+
+        // -- SEGUNDERO ---
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-82.767f, 10.276f, -31.386f));
+        model = glm::rotate(model, glm::radians(-segunderoRot), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));///-47.341
+        segundero.Draw(lightingShader);
+        model = glm::mat4(1);
+
+        // -- RESTO DEL RELOJ ---
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-82.767f, 10.276f, -31.386f));
+       
+        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        reloj.Draw(lightingShader);
+        model = glm::mat4(1);
+
+        // --- VENTANAS
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        ventanas.Draw(lightingShader);
+
+        // -- PUERTAS
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        puertas.Draw(lightingShader);
+
+        // -- PUERTA EXTRA
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        puertaEx.Draw(lightingShader);
+        
+        // -- DESAYUNADOR ---
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        desayunador.Draw(lightingShader);
+
+        // --- REFRIGERADOR  ---
+
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-50.524f, 7.46f, -0.698f));
+        model = glm::scale(model, glm::vec3(1.648f, 1.648f, 1.648f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        refrigerador.Draw(lightingShader);
+        model = glm::mat4(1);
+
+        // ---REFRIGERADOR PUERTA ----
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-50.524f, 7.46f, -0.698f));
+        model = glm::scale(model, glm::vec3(1.648f, 1.648f, 1.648f));
+        model = glm::rotate(model, glm::radians(puertaRot), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        refrigeradorPuerta.Draw(lightingShader);
+        model = glm::mat4(1);
+
+
+        glBindVertexArray(0);
 
         //simular mi luz y ver donde esta ubicada
         lampShader.Use();
@@ -574,20 +708,16 @@ void DoMovement()
         pointLightPositions[3].x += 0.1f;
         pointLightPositions[3].y += 0.1f;
         pointLightPositions[3].z += 0.1f;
-        cabraBool = true;
+        segunderoBool = true;
     }
 
-    // Teclas animacion cabra
+    // Teclas animacion reloj
 
     if (keys[GLFW_KEY_O])
     {
-        cabraBool = false;
+        segunderoBool = false;
     }
 
-    if (keys[GLFW_KEY_M])
-    {
-        librobool = true;
-    }
 
 
     // teclas animacion libro //
@@ -600,15 +730,15 @@ void DoMovement()
         librobool = false;
     }
 
-    // teclas animacion botas
+    // teclas animacion refrigerador
 
     if (keys[GLFW_KEY_B])
     {
-        botaBool = true;
+        refriBool = true;
     }
     if (keys[GLFW_KEY_V])
     {
-        botaBool = false;
+        refriBool = false;
     }
 
     // -- teclas animacion cerveza --
@@ -699,50 +829,28 @@ void animacionLibro() {
     }
 }
 
-void animacionBotas() {
+void animacionRefri() {
     // -- movimiento botas --  //
-    if (botaBool) {
-        if (arribaI) {
-            alturaBotaI += 0.05f;
+    if (refriBool) {
+        if (abriendo) {
+            puertaRot += 0.1f;
 
-            if (alturaBotaI > 2.0) {
-                arribaI = false;
-                abajoI = true;
+            if (puertaRot > 90.0) {
+                abriendo = false;
+                cerrando = true;
             }
         }
 
-        if (abajoI) {
+        if (cerrando) {
 
-            alturaBotaI -= 0.05f;
+            puertaRot -= 0.1f;
 
-            if (alturaBotaI < 0.15) {
-                arribaD = true;
-                abajoI = false;
+            if (puertaRot < 0.0) {
+                abriendo = true;
+                cerrando = false;
 
             }
         }
-
-        if (arribaD) {
-
-            alturaBotaD += 0.05f;
-
-            if (alturaBotaD > 2.0) {
-
-                arribaD = false;
-                abajoD = true;
-            }
-        }
-
-        if (abajoD) {
-
-            alturaBotaD -= 0.05;
-
-            if (alturaBotaD < 0.15) {
-                abajoD = false;
-                arribaI = true;
-            }
-        }
-
 
     }
 
@@ -752,81 +860,17 @@ void animacion()
 {
 
 
-    //Movimiento Cabra
-    if (cabraBool)
+    //Movimiento Segundero
+    if (segunderoBool)
     {
 
         if (recorrido1)
         {
             
-            movKitYaux = velocidadI + (-gravedad * tiempo);
-            tiempo += 0.001;
-            movKitYaux = movKitYaux / 1000;
-            movKitY += movKitYaux;
-            movKitX += 0.009f;
-            if (movKitYaux < 0)
-            {
-                movKitXaux = 0.09;
-                recorrido1 = false;
-                recorrido2 = true;
-            }
+            segunderoRot += 0.1f;
+
         }
-        if (recorrido2)
-        {
-            movKitYaux = velocidadI + (-gravedad * tiempo);
-            tiempo += 0.001;
-            movKitYaux = movKitYaux / 1000;
-            movKitXaux += 0.09f;
-
-            movKitY += movKitYaux;
-            movKitX += 0.009f;
-            if (movKitXaux > 47)
-            {
-                tiempo = 0;
-                recorrido3 = true;
-                recorrido2 = false;
-
-            }
-        }
-
-        if (recorrido3)
-        {
-
-            rotKit = 180;
-            movKitYaux = velocidadI + (-gravedad * tiempo);
-            tiempo += 0.001;
-            movKitYaux = movKitYaux / 1000;
-            //movKitZaux += 0.09f;
-
-            movKitY += movKitYaux;
-            movKitX -= 0.009f;
-            if (movKitYaux < 0)
-            {
-                movKitXaux = 122;
-                recorrido4 = true;
-                recorrido3 = false;
-
-            }
-        }
-
-        if (recorrido4)
-        {
-            rotKit = 180;
-            movKitYaux = velocidadI + (-gravedad * tiempo);
-            tiempo += 0.001;
-            movKitYaux = movKitYaux / 1000;
-            movKitXaux -= 0.09f;
-
-            movKitY += movKitYaux;
-            movKitX -= 0.009f;
-            if (movKitXaux < 78)
-            {
-                rotKit = 0;
-                tiempo = 0;
-                recorrido1 = true;
-                recorrido4 = false;
-            }
-        }
+        
         
 
 

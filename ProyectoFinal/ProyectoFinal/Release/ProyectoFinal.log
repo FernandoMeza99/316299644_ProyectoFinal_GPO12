@@ -1,40 +1,34 @@
 ﻿  ProyectoFinal.cpp
 D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(70,21): warning C4305: 'inicializando': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(286,30): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(324,27): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(313,30): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(351,27): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
           with
           [
               T=float
           ]
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(325,27): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(352,27): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
           with
           [
               T=float
           ]
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(326,27): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(353,27): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
           with
           [
               T=float
           ]
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(646,32): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(657,32): warning C4305: '-=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(738,32): warning C4305: '-=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(763,28): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(769,34): warning C4305: '=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(777,28): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(797,28): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(816,28): warning C4305: '+=': truncamiento de 'double' a 'float'
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(899,17): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(900,17): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(904,21): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(905,21): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(907,13): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(908,13): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(776,32): warning C4305: '+=': truncamiento de 'double' a 'float'
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(787,32): warning C4305: '-=': truncamiento de 'double' a 'float'
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(943,17): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(944,17): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(948,21): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(949,21): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(951,13): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\ProyectoFinal\ProyectoFinal.cpp(952,13): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
 soil2-debug.lib(SOIL2.obj) : warning LNK4075: se omite '/EDITANDCONTINUE' debido a la especificación '/OPT:ICF'
 LINK : warning LNK4098: la biblioteca predeterminada'MSVCRTD' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
   Generando código
-  Previous IPDB was built with incompatible compiler, fall back to full compilation.
-  All 638 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 634 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Generación de código finalizada
 soil2-debug.lib(etc1_utils.obj) : warning LNK4099: no se encontró PDB 'soil2-debug.pdb' con 'soil2-debug.lib(etc1_utils.obj)' o en 'D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\Release\soil2-debug.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
 soil2-debug.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'soil2-debug.pdb' con 'soil2-debug.lib(image_DXT.obj)' o en 'D:\Escuela\Semestre 2022-2\Lab de Compu Grafica\Repositorio\316299644_ProyectoFinal_GPO12\ProyectoFinal\Release\soil2-debug.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
